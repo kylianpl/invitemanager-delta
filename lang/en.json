@@ -1,0 +1,229 @@
+{
+    "locale_name": "en",
+    "discord_locale_names": ["en-GB", "en-US"],
+    "commands": {
+        "globals": {
+            "config": {
+                "command": "/config (subcommands)",
+                "description_long": "Configure the bot, `/help config` for all subcommands."
+            },
+            "rank": {
+                "command": "/rank (subcommands)",
+                "description_long": "A rank system to reward members who invited other members, when a member get the required number of invites, they will get the role and if they loses the required number, they will lose the role."
+            },
+            "info": {
+                "command": "/info [member]",
+                "description_long": "Get the number of invited currently in the server, invited who leaved and bonus gived by admins for the member.\nThis command is also avaliable by right clicking a member."
+            },
+            "bot_support": {
+                "command": "/bot_support",
+                "description_long": "Get an invite to the bot support server to ask a question, post suggestions or open a ticket ask a developer about security concerns or to request data deletion."
+            },
+            "help": {
+                "command": "/help [category]",
+                "description_long": "🗺️📌 You are here. Get informations about commands. The only category is 'config'."
+            },
+            "bonus": {
+                "command": "/bonus",
+                "description_long": "Add or remove bonus invites of a member. Bonus invites are considered for ranks."
+            }
+        },
+        "config": {
+            "goal_set": {
+                "command": "/config goal set (goal list)",
+                "description_long": "Set the goal list (number of members to reach). The goal list should be separated by spaces, every character other than numbers are removed. This variable is used in the goal channel."
+            },
+            "goal_list": {
+                "command": "/config goal list",
+                "description_long": "List all current goals, goals are set with `/config goal set (goal list)`."
+            },
+            "goal_rename": {
+                "command": "/config goal rename (name)",
+                "description_long": "Rename the goal channel. The name have a maximum of 100 characters. `{goal}` is replaced by the goal after your member number in the goal list."
+            },
+            "goal_create": {
+                "command": "/config goal create",
+                "description_long": "Create the goal channel. You can change the name with `/config goal rename (name)`. The bot need the permissions `Manage channels`, `Manage roles` and `Connect` globally to create a voice channel where nobody can connect."
+            },
+            "goal_delete": {
+                "command": "/config goal delete",
+                "description_long": "Delete the goal channel. The bot need the permission `Manage channels` to delete it."
+            },
+            "member_counter_create": {
+                "command": "/config member_counter create",
+                "description_long": "Create the member counter channel. You can change the name with `/config member_counter rename (name)`. The bot need the permissions `Manage channels`, `Manage roles` and `Connect` globally to create a voice channel where nobody can connect."
+            },
+            "member_counter_delete": {
+                "command": "/config member_counter delete",
+                "description_long": "Delete the member counter channel. The bot need the permission `Manage channels` to delete it."
+            },
+            "member_counter_rename": {
+                "command": "/config member_counter rename (name)",
+                "description_long": "Rename the member counter channel. The name have a maximum of 100 characters. `{memnumber}` is replaced by the number of member."
+            },
+            "bot_counter_create": {
+                "command": "/config bot_counter create",
+                "description_long": "Create the bot counter channel. You can change the name with `/config bot_counter rename (name)`. The bot need the permissions `Manage channels`, `Manage roles` and `Connect` globally to create a voice channel where nobody can connect."
+            },
+            "bot_counter_delete": {
+                "command": "/config bot_counter delete",
+                "description_long": "Delete the bot counter channel. The bot need the permission `Manage channels` to delete it."
+            },
+            "bot_counter_rename": {
+                "command": "/config bot_counter rename (name)",
+                "description_long": "Rename the bot counter channel. The name have a maximum of 100 characters. `{botnumber}` is replaced by the number of bots."
+            },
+            "welcome_channel": {
+                "command": "/config welcome channel (channel)",
+                "description_long": "Choose the channel where the bot will send welcome messages. The bot need permission `View Channel` and `Send messages` in the channel to send welcome messages."
+            },
+            "welcome_message": {
+                "command": "/config welcome message (message)",
+                "description_long": "Change the welcome message. The message have a maximum of 1024 characters. Variables are: `{server}`,`{member}`,`{membermention}`, `{inviter}`, `{invitermention}`, `{membernum}`, `{goal}`, `{togoal}`, `{invitercount}`."
+            },
+            "welcome_embed": {
+                "command": "/config welcome embed (True/False)",
+                "description_long": "Choose if the welcome message will be in an embed."
+            },
+            "welcome_toggle": {
+                "command": "/config welcome toggle (True/False)",
+                "description_long": "Choose if the bot should send welcome messages."
+            },
+            "goodbye_channel": {
+                "command": "/config goodbye channel (channel)",
+                "description_long": "Choose the channel where the bot will send goodbye messages. The bot need permission `View Channel` and `Send messages` in the channel to send welcome messages."
+            },
+            "goodbye_message": {
+                "command": "/config goodbye message (message)",
+                "description_long": "Change the goodbye message. The message have a maximum of 1024 characters. Variables are: `{server}`,`{member}`,`{membermention}`, `{inviter}`, `{invitermention}`, `{membernum}`, `{goal}`, `{togoal}`, `{invitercount}`."
+            },
+            "goodbye_embed": {
+                "command": "/config goodbye embed (True/False)",
+                "description_long": "Choose if the goodbye message will be in an embed."
+            },
+            "goodbye_toggle": {
+                "command": "/config goodbye toggle (True/False)",
+                "description_long": "Choose if the bot should send goodbye messages."
+            },
+            "language": {
+                "command": "/config language (language)",
+                "description_long": "Choose the language of the bot. If the bot is not avaliable in your language and you want to translate it, contact a developer by ticket in the support (`/bot_support`)."
+            },
+            "view": {
+                "command": "/config view",
+                "description_long": "View current configuration."
+            },
+            "auto_role": {
+                "command": "/config auto_role (role)",
+                "description_long": "Choose a role to add to all new members."
+            },
+            "admin_role": {
+                "command": "/config admin_role (role)",
+                "description_long": "Choose a role who can use admin commands. Everyone with the permission `Administrator` or this role can modify the bot configuration."
+            }
+        }
+    },
+    "errors": {
+        "title": "⚠️ __Error__",
+        "member_not_admin": "You do not have Administrator role nor `Administrators` permission on this server.",
+        "bot_permission_manage_role": "This bot does not have the permission to `Manage roles`.",
+        "bot_permission_connect": "This bot does not have the permission to `Connect`, The bot need this permission for creating a channel where members can't join.",
+        "bot_permission_manage_channels": "This bot does not have the permission to `Manage channels`.",
+        "bot_permission_view_channel": "This bot does not have the permission to `View Channels`.",
+        "bot_permission_send_messages": "This bot does not have the permission to `Send messages` in channel {channel}.",
+        "role_default": "The role can't be **\\@everyone**.",
+        "role_managed": "Role {role} is managed by another application.",
+        "role_above_bot": "Role {role} is above the highest role the bot can manage.",
+        "no_goal_list": "The goal list does not contain any number.",
+        "no_goal_channel": "There is no goal channel.",
+        "no_member_channel": "There is no member channel.",
+        "no_bot_channel": "There is no bot channel.",
+        "not_rank": "The role {role} is not a rank.",
+        "channel_name_too_long": "The channel name is too long, the max is 100 characters.",
+        "welcome_message_too_long": "The welcome message is too long, the max is 1024 characters.",
+        "goodbye_message_too_long": "The goodbye message is too long, the max is 1024 characters.",
+        "unknown": "A non managed error occured, some diagnostic information have been sent in order to fix the problem."
+    },
+    "output": {
+        "config_goal_title": "__Goals configuration__",
+        "config_goal_set_field_name": "Goal defined to:",
+        "config_goal_list_field_name": "Goals are:",
+        "config_goal_list_no_goals_description": "No goals",
+        "config_goal_rename_field_name": "Goal channel name is now set to:",
+        "config_goal_create_description": "Goal channel is now created.",
+        "config_goal_delete_description": "Goal channel has been deleted.",
+        "config_member_counter_title": "__Members counter configuration__",
+        "config_member_counter_rename_field_name": "Members counter channel is now called:",
+        "config_member_counter_create_description": "Members counter channel is created.",
+        "config_member_counter_delete_description": "Members counter channel has been deteled.",
+        "config_bot_counter_title": "__Bots counter configuration__",
+        "config_bot_counter_rename_field_name": "Bots counter channel is now called:",
+        "config_bot_counter_create_description": "Bots counter channel is created.",
+        "config_bot_counter_delete_description": "Bots counter channel has been deteled.",
+        "config_welcome_title": "__Welcome messages configuration__",
+        "config_welcome_channel_field_name": "Welcome channel is now:",
+        "config_welcome_message_field_name": "Welcome message is now:",
+        "config_welcome_embed_description_yes": "Welcome message embeding is now **✅ On**.",
+        "config_welcome_embed_description_no": "Welcome message embeding is now **❌ Off**.",
+        "config_welcome_toggle_description_yes": "Welcome message is now **✅ On**.",
+        "config_welcome_toggle_description_no": "Welcome message is now **❌ Off**.",
+        "config_goodbye_title": "__Goodbye messages configuration__",
+        "config_goodbye_channel_field_name": "Goodbye channel is now:",
+        "config_goodbye_message_field_name": "Goodbye message is now:",
+        "config_goodbye_embed_description_yes": "Goodbye message embeding is now **✅ On**.",
+        "config_goodbye_embed_description_no": "Goodbye message embeding is now **❌ Off**.",
+        "config_goodbye_toggle_description_yes": "Goodbye message is now **✅ On**.",
+        "config_goodbye_toggle_description_no": "Goodbye message is now **❌ Off**.",
+        "config_language_title": "__Language configuration__",
+        "config_language_description": "Bot set to English language 🇬🇧.",
+        "config_autorole_title": "__Automatic role configuration__",
+        "config_autorole_field_name": "Automatic role is now:",
+        "config_adminrole_title": "__Administrator role configuration__",
+        "config_adminrole_field_name": "Administrateur role is now:",
+        "config_remove_old_rank_on_rankup_title": "__Remove old rank on rank up configuration__",
+        "config_remove_old_rank_on_rankup_description_yes": "Old rank will **now** be removed when giving a new one.",
+        "config_remove_old_rank_on_rankup_description_no": "Old rank will **not** be removed when giving a new one.",
+        "config_view_title": "__Current configuration__",
+        "config_view_description": "Variables:",
+        "config_view_lang": "Language",
+        "config_view_admin_role": "Administrator role",
+        "config_view_auto_role": "Automatic role",
+        "config_view_welcome_channel": "Welcome channel",
+        "config_view_welcome": "Welcome message state",
+        "config_view_welcome_embed": "Welcome message embeding",
+        "config_view_welcome_message": "Welcome message",
+        "config_view_goodbye_channel": "Goodbye channel",
+        "config_view_goodbye": "Goodbye message state",
+        "config_view_goodbye_embed": "Goodbye message embeding",
+        "config_view_goodbye_message": "Goodbye message",
+        "config_view_member_channel": "Members counter channel",
+        "config_view_member_channel_name": "Members counter channel name",
+        "config_view_bot_channel": "Bots counter channel",
+        "config_view_bot_channel_name": "Bots counter channel name",
+        "config_view_goal_channel": "Goal channel",
+        "config_view_goal_channel_name": "Goal channel name",
+        "config_view_lang_value": "English 🇬🇧",
+        "config_view_yes": "✅ On",
+        "config_view_no": "❌ Off",
+        "config_view_remove_old_rank_on_rankup": "Remove old rank when giving a new one",
+        "config_view_no_value": "Not set",
+        "config_view_no_admin_role": "Members with administrator permission",
+        "rank_add_title": "__Add rank__",
+        "rank_add_description": "Role {role} is now a reward for **{number}** invitations.",
+        "rank_remove_title": "__Remove rank__",
+        "rank_remove_description": "Role {role} is not a reward anymore.",
+        "rank_list_title": "__Ranks list__",
+        "rank_list_field_value": "Reward rank for **{number}** invitations",
+        "rank_list_no_rank_description": "There is no rank. Add one with `/rank add [role] [number of invites]`.",
+        "info_title": "__About {member}__",
+        "info_invite": "Invitations",
+        "info_leave": "Leave",
+        "info_bonus": "Bonus",
+        "bonus_title": "__Bonus invitations__",
+        "bonus_description": "{member} now has {number} bonus invitations.",
+        "bot_support_title": "__InviteManager Delta Support Server__",
+        "bot_support_description": "Click [here](https://discord.gg/fmJ3ZdH7bb) to join the support server.\nIn the server, contact `i_am_user` (<@629335496140652557>).",
+        "help_title": "__Help__",
+        "help_description": "Parameters with `()` are required and parameters with `[]` are optional."
+    }
+}
