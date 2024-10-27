@@ -26,7 +26,7 @@ source .venv/bin/activate
 pip install -r requirements.txt
 ```
 4. Copy the `config-sample.json` to `config.json` and put your bot token as well as the id of an error channel, a join channel, a debug guild (server) and bot admins.
-Obtain the bot token from the [discord developer portal](https://discord.com/developers/applications).
+Obtain the bot token from the [discord developer portal](https://discord.com/developers/applications), the bot requires the server member intents.
 Obtain the ids from the discord client (you may need to activate the developer mode in advanced settings).
 5. Run the bot
 ```bash
