@@ -514,6 +514,22 @@ class LangHelper:
         )
         return embed
 
+    def command_top(self, interaction: Interaction, top: dict) -> Embed:
+        embed = Embed(
+            color=self.embed_color,
+            title=self.get_output_value(interaction, "top_title")
+        )
+        embed.timestamp = datetime.now()
+        if not top:
+            embed.description = self.get_output_value(interaction, "top_no_data_description")
+            return embed
+        for i, (member, number) in enumerate(top.items()):
+            embed.add_field(
+                name=f"{i+1}. {member}",
+                value=self.get_output_value(interaction, "top_field_value").format(number=number)
+            )
+        return embed
+
     def command_bonus(self, interaction: Interaction, member: Member, number: int) -> Embed:
         embed = Embed(
             color=self.embed_color,

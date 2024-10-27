@@ -15,6 +15,10 @@
                 "command": "/info [member]",
                 "description_long": "Get the number of invited currently in the server, invited who leaved and bonus gived by admins for the member.\nThis command is also avaliable by right clicking a member."
             },
+            "top": {
+                "command": "/top",
+                "description_long": "Get the top 10 members with the most invites."
+            },
             "bot_support": {
                 "command": "/bot_support",
                 "description_long": "Get an invite to the bot support server to ask a question, post suggestions or open a ticket ask a developer about security concerns or to request data deletion."
@@ -219,6 +223,9 @@
         "info_invite": "Invitations",
         "info_leave": "Leave",
         "info_bonus": "Bonus",
+        "top_title": "__Top 10 members__",
+        "top_field_value": "{number} Invitations",
+        "top_no_data_description": "No data",
         "bonus_title": "__Bonus invitations__",
         "bonus_description": "{member} now has {number} bonus invitations.",
         "bot_support_title": "__InviteManager Delta Support Server__",

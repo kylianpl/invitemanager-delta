@@ -136,6 +136,15 @@ class DatabaseHandler:
         leave = 0 if not data[1] else data[1]
         cursor.close()
         return [invites - leave, leave, bonus]
+    
+    def get_top_invites(self, guild, limit):
+        cursor = self.db.cursor()
+        query = "SELECT `inviter`, COUNT(`invited`)-SUM(`hasleave`) as `invites` FROM `invite` WHERE `ID`=? GROUP BY `inviter` ORDER BY `invites` DESC LIMIT ?"
+        query_tuple = (guild, limit)
+        cursor.execute(query, query_tuple)
+        data = cursor.fetchall()
+        cursor.close()
+        return data 
 
     def get_inviter(self, guild, invited):
         cursor = self.db.cursor()

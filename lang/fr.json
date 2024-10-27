@@ -15,6 +15,10 @@
                 "command": "/info [membre]",
                 "description_long": "Voir le nombre de personne que le membre à invité et qui ont et n'ont pas quittés et les bonus donnés par des admin pour le membre.\nCette commande est aussi disponible en cliquant droit sur un membre."
             },
+            "top": {
+                "command": "/top",
+                "description_long": "Voir le top 10 des membres avec le plus d'invitations."
+            },
             "bot_support": {
                 "command": "/bot_support",
                 "description_long": "Avoir une invitation sur le serveur de support pour poser des questions, donner des suggestions ou ouvrir un ticket pour parler à un développeur à propos de préoccupations en matière de sécurité ou pour la suppression des données."
@@ -219,6 +223,9 @@
         "info_invite": "Invitations",
         "info_leave": "Quittés",
         "info_bonus": "Bonus",
+        "top_title": "__Top 10 des membres__",
+        "top_field_value": "{number} Invitations",
+        "top_no_data_description": "Aucune donnée",
         "bonus_title": "__Invitations bonus__",
         "bonus_description": "{member} a maintenant {number} invitations bonus.",
         "bot_support_title": "__Serveur de Support d'InviteManager Delta__",

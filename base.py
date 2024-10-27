@@ -942,6 +942,17 @@ async def help_command(interaction: discord.Interaction, category: Choice[str] =
         category = category.value
     await interaction.response.send_message(embed=client.lang.command_help(interaction, category))
 
+# Top command
+
+@client.tree.command(name="top", description="Get the top 10 members with the most invites.")
+async def top_command(interaction: discord.Interaction):
+    top = client.db.get_top_invites(interaction.guild.id, 10)
+    if top:
+        top = {interaction.guild.get_member(member[0]): member[1] for member in top if interaction.guild.get_member(member[0])}
+    else:
+        top = {}
+    await interaction.response.send_message(embed=client.lang.command_top(interaction, top))
+
 # Bonus command
 
 
