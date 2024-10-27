@@ -168,9 +168,6 @@ async def on_member_join(member):
                         client.db.update_invite_leave(leave=False, guild=guild.id, invited=member.id)
                     member_invite = invite
                     break
-                elif old_invite.uses is None or invite.uses is None:
-                    errorchannel = client.get_channel(client.config["error_channel"])
-                    await errorchannel.send(f"Debug:\nGuild: {guild.id}\nInvite: {invite}\n{old_invite.uses=}\n{invite.uses=}")
     except discord.Forbidden:
         pass
 
