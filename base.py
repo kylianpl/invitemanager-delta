@@ -120,7 +120,7 @@ async def on_ready():
     for guild in client.guilds:
         mems += guild.member_count
     print(f"{client.user} | {len(client.guilds)} guilds | {mems} members")
-    print(f"Ready | {datetime.now().strftime('%d/%m/%Y | %H:%M:%S')}")
+    print(f"Ready. | {datetime.now().strftime('%d/%m/%Y | %H:%M:%S')}")
     sys.stdout.flush()
 
     # presence
@@ -1089,13 +1089,10 @@ async def on_command_error(interaction: discord.Interaction, error):
 @client.event
 async def on_error(event, *args, **kwargs):
     error = sys.exc_info()
-    # if rate limit, wait the time
-    if isinstance(args[0], discord.HTTPException) and args[0].status == 429:
-        retry_after = args[0].headers.get("Retry-After")
-        if retry_after:
-            await asyncio.sleep(int(retry_after) + 1)  # Wait for the suggested time before retrying
-        else:
-            await asyncio.sleep(5)
+    # if rate limit, ignore it
+    print(event, type(event), args, kwargs)
+    if isinstance(args[0], discord.HTTPException) and "429" in args[0]:
+        return
     errorchannel = client.get_channel(client.config["error_channel"])
     if errorchannel:
         tb = "".join(traceback.format_exception(error[1]))
