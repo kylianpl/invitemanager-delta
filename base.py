@@ -120,7 +120,7 @@ async def on_ready():
     for guild in client.guilds:
         mems += guild.member_count
     print(f"{client.user} | {len(client.guilds)} guilds | {mems} members")
-    print(f"Ready. | {datetime.now().strftime('%d/%m/%Y | %H:%M:%S')}")
+    print(f"Ready | {datetime.now().strftime('%d/%m/%Y | %H:%M:%S')}")
     sys.stdout.flush()
 
     # presence
@@ -156,20 +156,25 @@ async def on_member_join(member):
     # add invite to inviter
 
     member_invite = None
-    try:
-        guild_invites = await guild.invites()
-        for invite in guild_invites:
-            if invite.code in client.invite_data and client.invite_data[invite.code]:
-                old_invite = client.invite_data[invite.code]
-                if old_invite.uses and invite.uses and invite.uses > old_invite.uses:
-                    client.invite_data[invite.code] = invite
-                    if member != invite.inviter:
-                        client.db.add_invite(guild=guild.id, inviter=invite.inviter.id, invited=member.id)
-                        client.db.update_invite_leave(leave=False, guild=guild.id, invited=member.id)
-                    member_invite = invite
-                    break
-    except discord.Forbidden:
-        pass
+    tries = 0
+    while not member_invite and tries < 2:
+        try:
+            guild_invites = await guild.invites()
+            for invite in guild_invites:
+                if invite.code in client.invite_data and client.invite_data[invite.code]:
+                    old_invite = client.invite_data[invite.code]
+                    if old_invite.uses and invite.uses and invite.uses > old_invite.uses:
+                        client.invite_data[invite.code] = invite
+                        if member != invite.inviter:
+                            client.db.add_invite(guild=guild.id, inviter=invite.inviter.id, invited=member.id)
+                            client.db.update_invite_leave(leave=False, guild=guild.id, invited=member.id)
+                        member_invite = invite
+                        break
+        except discord.Forbidden:
+            pass
+        if not member_invite:
+            tries += 1
+            await asyncio.sleep(5)
 
     # welcome message
 
