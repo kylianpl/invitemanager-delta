@@ -986,62 +986,38 @@ def check_is_admin(interaction: discord.Interaction) -> bool:
 
 ManageBotGroup = app_commands.Group(name="manage_bot", description="Manage the bot")
 
-class JoinSourceType(Enum):
-	"""
-	The user joined the guild through an unknown source
-	Value: 0
-	Name: UNSPECIFIED
-	"""
-	UNSPECIFIED = 0
-	"""
-	The user was added to the guild by a bot using the guilds.join OAuth2 scope
-	Value: 1
-	Name: BOT
-	"""
-	BOT = 1
-	"""
-	The user was added to the guild by an integration (e.g. Twitch)
-	Value: 2
-	Name: INTEGRATION
-	"""
-	INTEGRATION = 2
-	"""
-	The user joined the guild through guild discovery
-	Value: 3
-	Name: DISCOVERY
-	"""
-	DISCOVERY = 3
-	"""
-	The user joined the guild through a student hub
-	Value: 4
-	Name: HUB
-	"""
-	HUB = 4
-	"""
-	The user joined the guild through an invite
-	Value: 5
-	Name: INVITE
-	"""
-	INVITE = 5
-	"""
-	The user joined the guild through a vanity URL
-	Value: 6
-	Name: VANITY_URL
-	"""
-	VANITY_URL = 6
-	"""
-	The user was accepted into the guild after applying for membership
-	Value: 7
-	Name: MANUAL_MEMBER_VERIFICATION
-	"""
-	MANUAL_MEMBER_VERIFICATION = 7
-	"""
-	The user joined the guild through a linked lobby
-	Value: 8
-	Name: SOCIAL_LAYER_INTEGRATION_LINKED_CHANNEL
-	"""
-	SOCIAL_LAYER_INTEGRATION_LINKED_CHANNEL = 8
-
+async def update_ranks_for_guild(guild: discord.Guild):
+    ranks = client.db.get_ranks(guild=guild.id)
+    if not ranks:
+        return 0
+    total_updated = 0
+    total_errors = 0
+    valid_rank_ids = {rank[1] for rank in ranks}
+    for member in guild.members:
+        if member.bot:
+            continue
+        invite_data = client.db.get_invites_data(guild=guild.id, member=member.id)
+        invite_count = invite_data[0] + invite_data[2]
+        db_rank, _ = client.db.get_rank_count(guild=guild.id, count=invite_count)
+        if db_rank:
+            rank = guild.get_role(db_rank)
+            if rank:
+                try:
+                    if rank not in member.roles:
+                        await member.add_roles(rank)
+                        total_updated += 1
+                    if client.db.get_config(guild=guild.id, key="RemoveOldRankOnRankup"):
+                        for role in member.roles:
+                            if role.id in valid_rank_ids and role.id != db_rank:
+                                await member.remove_roles(role)
+                                total_updated += 1
+                except discord.Forbidden:
+                    total_errors += 1
+                    pass
+                except discord.NotFound:
+                    total_errors += 1
+                    pass
+    return total_updated, total_errors
 
 
 @ManageBotGroup.command(name="refresh_data", description="Refresh the bot's invite for a guild")
@@ -1074,6 +1050,19 @@ async def manage_bot_refresh_data_command(interaction: discord.Interaction, guil
         if len(members) < 1000:
             break
     await interaction.response.send_message(f"Refreshed {total_refreshed}/{total_result_count} invites :white_check_mark:")
+
+    total_updated, total_errors = await update_ranks_for_guild(guild)
+    await interaction.followup.send_message(f"Updated {total_updated} ranks :white_check_mark: ({total_errors} errors)")
+
+@ManageBotGroup.command(name="update_rank", description="Update ranks for all members in a guild")
+@app_commands.check(check_is_admin)
+async def manage_bot_update_rank_command(interaction: discord.Interaction, guild_id: str):
+    guild = client.get_guild(int(guild_id))
+    if not guild:
+        await interaction.response.send_message("Guild not found")
+        return
+    total_updated, total_errors = await update_ranks_for_guild(guild)
+    await interaction.response.send_message(f"Updated {total_updated} ranks :white_check_mark: ({total_errors} errors)")
 
 @ManageBotGroup.command(name="sync", description="Sync commands")
 @app_commands.check(check_is_admin)
