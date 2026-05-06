@@ -1047,17 +1047,33 @@ class JoinSourceType(Enum):
 @ManageBotGroup.command(name="refresh_data", description="Refresh the bot's invite for a guild")
 @app_commands.check(check_is_admin)
 async def manage_bot_refresh_data_command(interaction: discord.Interaction, guild_id: str):
-    guild = client.get_guild(guild_id)
+    guild = client.get_guild(int(guild_id))
     if not guild:
         await interaction.response.send_message("Guild not found")
         return
-    data = await client.http.request(discord.http.Route('POST', '/guilds/{guild_id}/members-search', guild_id=guild_id), json={})
-    total_result_count = data.get('total_result_count', 0)
-    rep = ""
-    for m in data.get('members', []):
-        mem = discord.Member(data=m['member'], guild=guild, state=client._connection)
-        rep += f"{mem.mention} -> <@{m.get('inviter_id', 'unknown')}>\n"
-    await interaction.response.send_message(f"{rep}Refreshed {total_result_count} invites :white_check_mark:")
+    total_refreshed = 0
+    json_data = {"limit": 1000}
+    while True:
+        data = await client.http.request(
+            discord.http.Route('POST', '/guilds/{guild_id}/members-search', guild_id=guild_id),
+            json=json_data
+        )
+        members = data.get('members', [])
+        total_result_count = data.get('total_result_count', 0)
+        for m in members:
+            inviter_id = m.get('inviter_id')
+            if inviter_id:
+                member_data = m.get('member', {})
+                user_data = member_data.get('user', {})
+                member_id = user_data.get('id')
+                if member_id:
+                    client.db.add_invite(guild=guild.id, inviter=int(inviter_id), invited=int(member_id))
+                    client.db.update_invite_leave(leave=False, guild=guild.id, invited=int(member_id))
+                    total_refreshed += 1
+        json_data["after"] = {"user_id": members[-1]['member']['user']['id']} if members else None
+        if len(members) < 1000:
+            break
+    await interaction.response.send_message(f"Refreshed {total_refreshed}/{total_result_count} invites :white_check_mark:")
 
 @ManageBotGroup.command(name="sync", description="Sync commands")
 @app_commands.check(check_is_admin)
