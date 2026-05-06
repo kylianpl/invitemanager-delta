@@ -5,6 +5,7 @@ from async_eval import eval
 from discord.app_commands import Choice
 from discord import app_commands
 from datetime import datetime
+from enum import Enum
 import traceback
 import logging
 import asyncio
@@ -984,6 +985,95 @@ def check_is_admin(interaction: discord.Interaction) -> bool:
     return interaction.user.id in config["admin_ids"]
 
 ManageBotGroup = app_commands.Group(name="manage_bot", description="Manage the bot")
+
+class JoinSourceType(Enum):
+	"""
+	The user joined the guild through an unknown source
+	Value: 0
+	Name: UNSPECIFIED
+	"""
+	UNSPECIFIED = 0
+	"""
+	The user was added to the guild by a bot using the guilds.join OAuth2 scope
+	Value: 1
+	Name: BOT
+	"""
+	BOT = 1
+	"""
+	The user was added to the guild by an integration (e.g. Twitch)
+	Value: 2
+	Name: INTEGRATION
+	"""
+	INTEGRATION = 2
+	"""
+	The user joined the guild through guild discovery
+	Value: 3
+	Name: DISCOVERY
+	"""
+	DISCOVERY = 3
+	"""
+	The user joined the guild through a student hub
+	Value: 4
+	Name: HUB
+	"""
+	HUB = 4
+	"""
+	The user joined the guild through an invite
+	Value: 5
+	Name: INVITE
+	"""
+	INVITE = 5
+	"""
+	The user joined the guild through a vanity URL
+	Value: 6
+	Name: VANITY_URL
+	"""
+	VANITY_URL = 6
+	"""
+	The user was accepted into the guild after applying for membership
+	Value: 7
+	Name: MANUAL_MEMBER_VERIFICATION
+	"""
+	MANUAL_MEMBER_VERIFICATION = 7
+	"""
+	The user joined the guild through a linked lobby
+	Value: 8
+	Name: SOCIAL_LAYER_INTEGRATION_LINKED_CHANNEL
+	"""
+	SOCIAL_LAYER_INTEGRATION_LINKED_CHANNEL = 8
+
+
+
+@ManageBotGroup.command(name="refresh_data", description="Refresh the bot's invite for a guild")
+@app_commands.check(check_is_admin)
+async def manage_bot_refresh_data_command(interaction: discord.Interaction, guild_id: str):
+    guild = client.get_guild(int(guild_id))
+    if not guild:
+        await interaction.response.send_message("Guild not found")
+        return
+    total_refreshed = 0
+    json_data = {"limit": 1000}
+    while True:
+        data = await client.http.request(
+            discord.http.Route('POST', '/guilds/{guild_id}/members-search', guild_id=guild_id),
+            json=json_data
+        )
+        members = data.get('members', [])
+        total_result_count = data.get('total_result_count', 0)
+        for m in members:
+            inviter_id = m.get('inviter_id')
+            if inviter_id:
+                member_data = m.get('member', {})
+                user_data = member_data.get('user', {})
+                member_id = user_data.get('id')
+                if member_id:
+                    client.db.add_invite(guild=guild.id, inviter=int(inviter_id), invited=int(member_id))
+                    client.db.update_invite_leave(leave=False, guild=guild.id, invited=int(member_id))
+                    total_refreshed += 1
+        json_data["after"] = {"user_id": members[-1]['member']['user']['id']} if members else None
+        if len(members) < 1000:
+            break
+    await interaction.response.send_message(f"Refreshed {total_refreshed}/{total_result_count} invites :white_check_mark:")
 
 @ManageBotGroup.command(name="sync", description="Sync commands")
 @app_commands.check(check_is_admin)
